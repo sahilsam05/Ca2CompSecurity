@@ -1,12 +1,21 @@
 package org.example;
+
+
 //Reference
 
 //Aes Encryption
-//https://www.youtube.com/watch?v=LtUU8Q3rgjM
+// https://www.youtube.com/watch?v=LtUU8Q3rgjM
+
+// File encryption
+// https://www.youtube.com/watch?v=xhMkrGN3LNY&t=59s
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
+import javax.crypto.Cipher;
 
 public class Main {
 
@@ -31,6 +40,7 @@ public class Main {
             {
                 System.out.print("Enter the file path to encrypt: ");
                 String encryptFilePath = keyboard.nextLine();
+                encryptFile(encryptFilePath);
             }
             else if (choice == 2)
             {
@@ -54,6 +64,25 @@ public class Main {
             keyGen.init(128); // AES key size
             secretKey = keyGen.generateKey();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void encryptFile(String filePath)
+    {
+        try
+        {
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] inputBytes = Files.readAllBytes(Paths.get(filePath));
+            byte[] outputBytes = cipher.doFinal(inputBytes);
+            try (FileOutputStream fos = new FileOutputStream(filePath + ".enc"))
+            {
+                fos.write(outputBytes);
+            }
+            System.out.println("File encrypted successfully.");
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
