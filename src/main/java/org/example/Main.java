@@ -1,15 +1,16 @@
 package org.example;
+//Reference
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
+//Aes Encryption
+//https://www.youtube.com/watch?v=LtUU8Q3rgjM
+
 import javax.crypto.SecretKey;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main {
 
+    private static final String ALGORITHM = "AES";
+    private static SecretKey secretKey;
     private static final String ALGORITHM = "AES";
     private static SecretKey secretKey;
 
