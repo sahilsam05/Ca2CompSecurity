@@ -14,6 +14,7 @@ import javax.crypto.SecretKey;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.Scanner;
 import javax.crypto.Cipher;
 
@@ -22,8 +23,7 @@ public class Main {
     private static final String ALGORITHM = "AES";
     private static SecretKey secretKey;
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
         int choice = 0;
 
@@ -36,23 +36,16 @@ public class Main {
             choice = keyboard.nextInt();
             keyboard.nextLine();
 
-            if (choice == 1)
-            {
+            if (choice == 1) {
                 System.out.print("Enter the file path to encrypt: ");
                 String encryptFilePath = keyboard.nextLine();
                 encryptFile(encryptFilePath);
-            }
-            else if (choice == 2)
-            {
+            } else if (choice == 2) {
                 System.out.print("Enter the file path to decrypt: ");
                 String decryptFilePath = keyboard.nextLine();
-            }
-            else if (choice == 3)
-            {
+            } else if (choice == 3) {
                 System.out.println("Exiting the application.");
-            }
-            else
-            {
+            } else {
                 System.out.println("Invalid choice. Please try again.");
             }
         }
@@ -68,22 +61,29 @@ public class Main {
         }
     }
 
-    private static void encryptFile(String filePath)
-    {
-        try
-        {
+    private static void encryptFile(String filePath) {
+        try {
+            KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
+            keyGen.init(128);
+            secretKey = keyGen.generateKey();
+
+            byte[] inputBytes = Files.readAllBytes(Paths.get(filePath));
+
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            byte[] inputBytes = Files.readAllBytes(Paths.get(filePath));
             byte[] outputBytes = cipher.doFinal(inputBytes);
-            try (FileOutputStream fos = new FileOutputStream(filePath + ".enc"))
-            {
+
+            try (FileOutputStream fos = new FileOutputStream("ciphertext.txt")) {
                 fos.write(outputBytes);
             }
+
+            String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
             System.out.println("File encrypted successfully.");
-        } catch (Exception e)
-        {
-            e.printStackTrace();
+            System.out.println("Encryption key (Base64): " + encodedKey);
+            System.out.println("Encrypted data written to ciphertext.txt");
+
+        } catch (Exception e) {
+            System.out.println("Error during encryption: " + e.getMessage());
         }
     }
 }
