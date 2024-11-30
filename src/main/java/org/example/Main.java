@@ -4,13 +4,12 @@ package org.example;
 //Aes Encryption
 //https://www.youtube.com/watch?v=LtUU8Q3rgjM
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.util.Scanner;
 
 public class Main {
 
-    private static final String ALGORITHM = "AES";
-    private static SecretKey secretKey;
     private static final String ALGORITHM = "AES";
     private static SecretKey secretKey;
 
@@ -46,6 +45,16 @@ public class Main {
             {
                 System.out.println("Invalid choice. Please try again.");
             }
+        }
+    }
+
+    public static void generateKey() {
+        try {
+            KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
+            keyGen.init(128); // AES key size
+            secretKey = keyGen.generateKey();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
