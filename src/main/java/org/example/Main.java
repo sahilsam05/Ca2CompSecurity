@@ -17,9 +17,9 @@ import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.Scanner;
 import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Main {
-
     private static final String ALGORITHM = "AES";
     private static SecretKey secretKey;
 
@@ -42,7 +42,8 @@ public class Main {
                 encryptFile(encryptFilePath);
             } else if (choice == 2) {
                 System.out.print("Enter the file path to decrypt: ");
-                String decryptFilePath = keyboard.nextLine();
+                String keyString = keyboard.nextLine();
+                decryptFilePath(keyString);
             } else if (choice == 3) {
                 System.out.println("Exiting the application.");
             } else {
@@ -54,12 +55,16 @@ public class Main {
     public static void generateKey() {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
-            keyGen.init(128); // AES key size
+            keyGen.init(128); // This is the AES key size
             secretKey = keyGen.generateKey();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    // Encryption
+    // https://stackoverflow.com/questions/62883618/encryption-decryption-aes-for-all-type-of-file-in-java
+    // https://stackoverflow.com/questions/20796042/aes-encryption-and-decryption-with-java
 
     private static void encryptFile(String filePath) {
         try {
@@ -85,5 +90,29 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Error during encryption: " + e.getMessage());
         }
+
+        private static void decryptFile (String, FilePath, String keystring )
+        try {
+            // Decode the key
+            byte[] decodedKey = Base64.getDecoder().decode(keyString);
+            SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, ALGORITHM);
+
+            byte[] inputBytes = Files.readAllBytes(Paths.get(filePath));
+
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, originalKey);
+            byte[] outputBytes = cipher.doFinal(inputBytes);
+
+            try (FileOutputStream fos = new FileOutputStream("plaintext.txt")) {
+                fos.write(outputBytes);
+            }
+
+            System.out.println("File decrypted successfully.");
+            System.out.println("Decrypted data written to plaintext.txt");
+
+        } catch (Exception e) {
+            System.out.println("Error during decryption: " + e.getMessage());
+        }
     }
 }
+
