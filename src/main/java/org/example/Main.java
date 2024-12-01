@@ -44,6 +44,7 @@ public class Main
 
                 if (choice == 1)
                 {
+                    generateKey();
                     System.out.print("Enter the file path to encrypt: ");
                     String encryptFilePath = keyboard.nextLine();
                     encryptFile(encryptFilePath);
@@ -73,6 +74,8 @@ public class Main
             }
         }
     }
+
+    // https://www.youtube.com/watch?v=_nmm0nZqIIY
 
     public static void generateKey()
     {
