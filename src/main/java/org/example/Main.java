@@ -23,7 +23,8 @@ public class Main {
     private static final String ALGORITHM = "AES";
     private static SecretKey secretKey;
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         Scanner keyboard = new Scanner(System.in);
         int choice = 0;
 
@@ -42,8 +43,10 @@ public class Main {
                 encryptFile(encryptFilePath);
             } else if (choice == 2) {
                 System.out.print("Enter the file path to decrypt: ");
+                String decryptFilePath = keyboard.nextLine();
+                System.out.print("Enter the key: ");
                 String keyString = keyboard.nextLine();
-                decryptFilePath(keyString);
+                decryptFile(decryptFilePath, keyString);
             } else if (choice == 3) {
                 System.out.println("Exiting the application.");
             } else {
@@ -66,8 +69,10 @@ public class Main {
     // https://stackoverflow.com/questions/62883618/encryption-decryption-aes-for-all-type-of-file-in-java
     // https://stackoverflow.com/questions/20796042/aes-encryption-and-decryption-with-java
 
-    private static void encryptFile(String filePath) {
-        try {
+    private static void encryptFile(String filePath)
+    {
+        try
+        {
             KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
             keyGen.init(128);
             secretKey = keyGen.generateKey();
@@ -90,8 +95,9 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Error during encryption: " + e.getMessage());
         }
+    }
 
-        private static void decryptFile (String, FilePath, String keystring )
+    private static void decryptFile(String filePath, String keyString) {
         try {
             // Decode the key
             byte[] decodedKey = Base64.getDecoder().decode(keyString);
@@ -115,4 +121,3 @@ public class Main {
         }
     }
 }
-
